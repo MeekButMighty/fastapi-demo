@@ -10,7 +10,7 @@ app = FastAPI()
 
 @app.get("/")  # zone apex
 def zone_apex():
-    return {"Hello": "Hello RIZZLER"}
+    return {"Hello": "I did my lab! yay!"}
 
 @app.get("/add/{a}/{b}")
 def add(a: int, b: int):
