@@ -19,3 +19,8 @@ def add(a: int, b: int):
 @app.get("/square/{c}")
 def square(c: int):
     return {"square": c*c}
+
+@app.get("/subtract/{d}/{e}")
+def subtract(d: int, e: int):
+    return {"difference": d-e}
+
