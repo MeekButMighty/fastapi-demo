@@ -5,8 +5,16 @@ from typing import Optional
 from pydantic import BaseModel
 import json
 import os
+import mysql.connector
 
 app = FastAPI()
+DBHOST = "ds2022.cqee4iwdcaph.us-east-1.rds.amazonaws.com"
+DBUSER = "admin"
+DBPASS = os.getenv('DBPASS')
+DB = "azt6gn"
+
+db = mysql.connector.connect(user=DBUSER, host=DBHOST, password=DBPASS, database=DB)
+cur=db.cursor()
 
 @app.get("/")  # zone apex
 def zone_apex():
