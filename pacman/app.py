@@ -15,12 +15,13 @@ s3 = boto3.client('s3')
 baseurl = 'http://azt6gn-dp1-spotify.s3-website-us-east-1.amazonaws.com/'
 
 # database things
-DBHOST = os.getenv('DBHOST')
-DBUSER = os.getenv('DBUSER')
-DBPASS = os.getenv('DBPASS')
-DB = os.getenv('DB')
-db = mysql.connector.connect(user=DBUSER, host=DBHOST, password=DBPASS, database=DB)
-cur = db.cursor()
+def get_db_connection():
+    return mysql.connector.connect(
+        user=os.getenv('DBUSER'),
+        host=os.getenv('DBHOST'),
+        password=os.getenv('DBPASS'),
+        database=os.getenv('DB')
+    )
 
 # file extensions to trigger on
 _SUPPORTED_EXTENSIONS = (
@@ -57,6 +58,8 @@ def s3_handler(event):
 
     # try to insert the song into the database
     try:
+      db = get_db_connection()
+      cur = db.cursor()
       add_song = ("INSERT INTO songs "
                "(title, album, artist, year, file, image, genre) "
                "VALUES (%s, %s, %s, %s, %s, %s, %s)")
@@ -67,7 +70,9 @@ def s3_handler(event):
     except mysql.connector.Error as err:
       app.log.error("Failed to insert song: %s", err)
       db.rollback()
-
+    finally:
+      cur.close()
+      db.close()
 # perform a suffix match against supported extensions
 def _is_json(key):
   return key.endswith(_SUPPORTED_EXTENSIONS)
