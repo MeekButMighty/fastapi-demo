@@ -37,6 +37,8 @@ def get_genres():
     except Error as e:
         print("MySQL Error: ", str(e))
         return None
+    cur.close
+    db.close
 
 @app.get('/songs')
 def get_songs():
@@ -54,7 +56,8 @@ def get_songs():
     except Error as e:
         print("MySQL Error: ", str(e))
         return None
-
+    cur.close
+    db.close
 
 @app.get("/")  # zone apex
 def zone_apex():
